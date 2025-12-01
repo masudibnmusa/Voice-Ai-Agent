@@ -36,7 +36,7 @@ A web-based application built with Node.js that lets users share their WhatsApp 
 
 1. **Clone the repository**
 ```bash
-   git clone https://github.com/yourusername/whatsapp-screen-reader.git
+   git clone https://github.com/masudibnmusa/Voice-Ai-Agent.git
    cd whatsapp-screen-reader
 ```
 
@@ -88,13 +88,13 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📄 License
 
-[Add your license here - e.g., MIT License]
+MIT License
 
 ---
 
 ## 👤 Author
 
-[Your Name/Username]
+Masud Ibn Musa
 
 ---
 
