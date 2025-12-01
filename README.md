@@ -1,12 +1,30 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+WhatsApp Screen Reader
 
-# Run and deploy your AI Studio app
+A web-based application built with Node.js that lets users share their WhatsApp screen and automatically reads incoming messages using a natural female voice. Designed for hands-free communication, accessibility, and productivity.
 
-This contains everything you need to run your app locally.
+🚀 Features
 
-View your app in AI Studio: https://ai.studio/apps/drive/1tHVeVbjbHVLmnOenm8ioaBgkhMlpc5Sn
+Screen Sharing: Share your WhatsApp screen directly through the web app.
+
+Real-Time Message Detection: Automatically identifies and extracts incoming WhatsApp messages.
+
+Text-to-Speech Output: Reads messages aloud using a smooth female voice.
+
+Accessibility-Friendly: Ideal for hands-free usage, multitasking, or visually-impaired users.
+
+Lightweight Web UI: Simple and intuitive interface for easy interaction.
+
+🛠️ Tech Stack
+
+Node.js
+
+Express.js (if applicable)
+
+WebRTC for screen sharing
+
+Speech Synthesis / TTS API
+
+JavaScript / HTML / CSS
 
 ## Run Locally
 
