@@ -1,0 +1,7 @@
+{
+  "name": "WhatsVoice AI Agent",
+  "description": "An agentic AI interface that visually scans and reads WhatsApp messages using Gemini Vision and Text-to-Speech via Screen Share.",
+  "requestFramePermissions": [
+    "display-capture"
+  ]
+}
