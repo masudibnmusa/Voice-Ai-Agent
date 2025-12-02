@@ -107,26 +107,35 @@ const App: React.FC = () => {
   }, [isWatching, isProcessing, lastReadContent]);
 
   const captureAndAnalyze = async () => {
-    if (!videoRef.current || !canvasRef.current) return;
+    if (!videoRef.current || !canvasRef.current) {
+      console.log("captureAndAnalyze: missing video or canvas ref");
+      return;
+    }
 
     // Check if video is actually playing/ready
+    console.log("captureAndAnalyze: video readyState", videoRef.current.readyState);
     if (videoRef.current.readyState < 2) return; // HAVE_CURRENT_DATA or higher
 
     setIsProcessing(true);
     try {
         // Draw video frame to canvas
         const context = canvasRef.current.getContext('2d');
-        if (!context) return;
+        if (!context) {
+          console.log("captureAndAnalyze: no 2d context on canvas");
+          return;
+        }
 
         canvasRef.current.width = videoRef.current.videoWidth;
         canvasRef.current.height = videoRef.current.videoHeight;
         context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
+        console.log("captureAndAnalyze: captured frame", canvasRef.current.width, canvasRef.current.height);
 
         // Get Base64
         const base64Image = canvasRef.current.toDataURL('image/png');
         
         // Send to Gemini Vision
         const result = await detectMessageFromScreen(base64Image);
+        console.log("detectMessageFromScreen result:", result);
 
         if (result && result.content) {
             // Check if we already read this message to avoid loops
