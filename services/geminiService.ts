@@ -60,21 +60,43 @@ export const detectMessageFromScreen = async (base64Image: string): Promise<{ se
     try {
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
-            contents: {
-                parts: [
-                    { inlineData: { mimeType: 'image/png', data: cleanBase64 } },
-                    { text: prompt }
-                ]
-            },
-            config: {
-                responseMimeType: "application/json"
-            }
+            contents: [
+                {
+                    role: "user",
+                    parts: [
+                        { inlineData: { mimeType: 'image/png', data: cleanBase64 } },
+                        { text: prompt }
+                    ]
+                }
+            ]
         });
 
-        const text = response.text;
-        if (!text) return null;
-        
-        return JSON.parse(text);
+        // The @google/genai client returns candidates at the top level (no .response property)
+        const candidates = (response as any).candidates || [];
+        const parts = candidates[0]?.content?.parts || [];
+        const text = parts
+          .map((p: any) => (typeof p.text === 'string' ? p.text : ''))
+          .join('');
+
+        console.log("Vision raw response text:", text);
+        if (!text || !text.trim()) return null;
+
+        // Try to extract JSON object if the model wrapped it in prose or code fences
+        try {
+          const jsonMatch = text.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            const parsed = JSON.parse(jsonMatch[0]);
+            return parsed;
+          }
+        } catch (e) {
+          console.error("Failed to parse vision JSON:", e, "raw=", text);
+        }
+
+        // Fallback: treat the entire text as the message content so at least something is read
+        return {
+          sender: "Someone",
+          content: text.trim(),
+        };
     } catch (error) {
         console.error("Vision analysis failed", error);
         return null;
@@ -97,9 +119,22 @@ export const analyzeAndFormatForSpeech = async (sender: string, message: string)
     try {
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
-            contents: prompt,
+            contents: [
+                {
+                    role: "user",
+                    parts: [{ text: prompt }]
+                }
+            ],
         });
-        return response.text || `New message from ${sender}: ${message}`;
+
+        // Extract plain text from top-level candidates (no .response property)
+        const candidates = (response as any).candidates || [];
+        const parts = candidates[0]?.content?.parts || [];
+        const text = parts
+          .map((p: any) => (typeof p.text === 'string' ? p.text : ''))
+          .join('');
+
+        return text || `New message from ${sender}: ${message}`;
     } catch (error) {
         return `Message from ${sender}: ${message}`;
     }
